@@ -43,6 +43,8 @@ namespace HelloWorld
             Console.WriteLine("What is your name?");
             string _name = Console.ReadLine();
             player = new Player(100, 10, _name);
+            SelectItems(player);
+            return player;
         }
 
         //Intializes item values
@@ -158,8 +160,8 @@ namespace HelloWorld
         //Repeated until the game ends
         public void Update()
         {
-            CreateCharacter(_player1);
-            CreateCharacter(_player2);
+            _player1 = CreateCharacter();
+            _player2 = CreateCharacter();
             BattleLoop();
         }
 
