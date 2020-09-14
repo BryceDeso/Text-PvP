@@ -4,12 +4,6 @@ using System.Text;
 
 namespace HelloWorld
 {
-    struct Player
-    {
-        public int health;
-        public int damage;
-    }
-
     struct Item
     {
         public int statBoost;
@@ -19,8 +13,8 @@ namespace HelloWorld
     {
 
         bool _gameOver = false;
-        Player _player1;
-        Player _player2;
+        Player _player = new Player();
+        Player _player2 = new Player();
         Item longsword;
         Item dagger;
 
@@ -47,8 +41,8 @@ namespace HelloWorld
         //Initializes the player values
         public void InitializePlayer()
         {
-            _player1.health = 100;
-            _player1.damage = 5;
+            _player.health = 100;
+            _player.damage = 5;
 
             _player2.health = 100;
             _player2.damage = 5;
@@ -67,14 +61,14 @@ namespace HelloWorld
             GetInput(out input, "Longsword", "Dagger", "Welcome player one, please choose a weapon.");
             if (input == '1')
             {
-                _player1.damage = longsword.statBoost;
+                _player.damage = longsword.statBoost;
             }
             else if (input == '2')
             {
-                _player1.damage = dagger.statBoost;
+                _player.damage = dagger.statBoost;
             }
             Console.WriteLine("\nPlayer 1");
-            PrintStats(_player1);
+            PrintStats(_player);
 
 
             GetInput(out input, "Longsword", "Dagger", "Welcome player two, please choose a weapon.");
@@ -98,11 +92,11 @@ namespace HelloWorld
         {
             Console.WriteLine("Now GO!");
 
-            while (_player1.health > 0 && _player2.health > 0)
+            while (_player.health > 0 && _player2.health > 0)
             {
                 Console.Clear();
                 Console.WriteLine("Player1");
-                PrintStats(_player1);
+                PrintStats(_player);
                 Console.WriteLine("\nPlayer2");
                 PrintStats(_player2);
 
@@ -110,8 +104,8 @@ namespace HelloWorld
                 GetInput(out input, "Attack", "NO!", "Your turn Player 1");
                 if (input == '1')
                 {
-                    _player2.health -= _player1.damage;
-                    Console.WriteLine("Player 1 did " + _player1.damage + " to Player 2.");
+                    _player2.health -= _player.damage;
+                    Console.WriteLine("Player 1 did " + _player.damage + " to Player 2.");
                     Console.WriteLine("Press any key to continue.");
                     Console.ReadKey();
                 }
@@ -124,14 +118,14 @@ namespace HelloWorld
 
                 Console.Clear();
                 Console.WriteLine("Player1");
-                PrintStats(_player1);
+                PrintStats(_player);
                 Console.WriteLine("\nPlayer2");
                 PrintStats(_player2);
 
                 GetInput(out input, "Attack", "STOP!", "Your turn Player 2");
                 if (input == '1')
                 {
-                    _player1.health -= _player2.damage;
+                    _player.health -= _player2.damage;
                     Console.WriteLine("Player 2 did " + _player2.damage + " to Player 1.");
                     Console.WriteLine("Press any key to continue.");
                     Console.ReadKey();
@@ -144,7 +138,7 @@ namespace HelloWorld
                 }
             }
             Console.Clear();
-            if (_player1.health > 0)
+            if (_player.health > 0)
             {
                 Console.WriteLine("Player 1 Wins!!!!!!!!!");
                 Console.WriteLine("Press any key to continue.");
