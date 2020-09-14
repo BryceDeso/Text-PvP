@@ -13,8 +13,8 @@ namespace HelloWorld
     {
 
         bool _gameOver = false;
-        Player _player = new Player();
-        Player _player2 = new Player();
+        Player _player1 = new Player(50, 50, "Jeff");
+        Player _player2 = new Player(150, 20, "Chris");
         Item longsword;
         Item dagger;
 
@@ -38,14 +38,11 @@ namespace HelloWorld
             }
         }
 
-        //Initializes the player values
-        public void InitializePlayer()
+        public void CreateCharacter(Player player)
         {
-            _player.health = 100;
-            _player.damage = 5;
-
-            _player2.health = 100;
-            _player2.damage = 5;
+            Console.WriteLine("What is your name?");
+            string _name = Console.ReadLine();
+            player = new Player(100, 10, _name);
         }
 
         //Intializes item values
@@ -55,57 +52,48 @@ namespace HelloWorld
             dagger.statBoost = 10;
         }
 
-        public void EquipItems()
+        public void SelectItems()
         {
             char input = ' ';
             GetInput(out input, "Longsword", "Dagger", "Welcome player one, please choose a weapon.");
             if (input == '1')
             {
-                _player.damage = longsword.statBoost;
+                _player1.EquipWeapon(longsword);
             }
             else if (input == '2')
             {
-                _player.damage = dagger.statBoost;
+                _player1.EquipWeapon(dagger);
             }
             Console.WriteLine("\nPlayer 1");
-            PrintStats(_player);
+            _player1.PrintStats();
 
 
             GetInput(out input, "Longsword", "Dagger", "Welcome player two, please choose a weapon.");
             if (input == '1')
             {
-                _player2.damage = longsword.statBoost;
+                _player2.EquipWeapon(longsword);
             }
             else if (input == '2')
             {
-                _player2.damage = dagger.statBoost;
+                _player2.EquipWeapon(dagger);
             }
-        }
-
-        public void PrintStats(Player player)
-        {
-            Console.WriteLine("Health: " + player.health);
-            Console.WriteLine("Damage: " + player.damage);
         }
 
         public void BattleLoop()
         {
             Console.WriteLine("Now GO!");
 
-            while (_player.health > 0 && _player2.health > 0)
+            while (_player1.GetIsAlive() && _player2.GetIsAlive())
             {
                 Console.Clear();
-                Console.WriteLine("Player1");
-                PrintStats(_player);
-                Console.WriteLine("\nPlayer2");
-                PrintStats(_player2);
+                _player1.PrintStats();
+                _player2.PrintStats();
 
                 char input = ' ';
                 GetInput(out input, "Attack", "NO!", "Your turn Player 1");
                 if (input == '1')
                 {
-                    _player2.health -= _player.damage;
-                    Console.WriteLine("Player 1 did " + _player.damage + " to Player 2.");
+                    _player1.Attack(_player2);
                     Console.WriteLine("Press any key to continue.");
                     Console.ReadKey();
                 }
@@ -117,16 +105,13 @@ namespace HelloWorld
                 }
 
                 Console.Clear();
-                Console.WriteLine("Player1");
-                PrintStats(_player);
-                Console.WriteLine("\nPlayer2");
-                PrintStats(_player2);
+                _player1.PrintStats();
+                _player2.PrintStats();
 
                 GetInput(out input, "Attack", "STOP!", "Your turn Player 2");
                 if (input == '1')
                 {
-                    _player.health -= _player2.damage;
-                    Console.WriteLine("Player 2 did " + _player2.damage + " to Player 1.");
+                    _player2.Attack(_player1);
                     Console.WriteLine("Press any key to continue.");
                     Console.ReadKey();
                 }
@@ -138,7 +123,7 @@ namespace HelloWorld
                 }
             }
             Console.Clear();
-            if (_player.health > 0)
+            if (_player1.GetIsAlive())
             {
                 Console.WriteLine("Player 1 Wins!!!!!!!!!");
                 Console.WriteLine("Press any key to continue.");
@@ -167,14 +152,14 @@ namespace HelloWorld
         //Performed once when the game begins
         public void Start()
         {
-            InitializePlayer();
             InitalizeItems();
         }
 
         //Repeated until the game ends
         public void Update()
         {
-            EquipItems();
+            CreateCharacter(_player1);
+            CreateCharacter(_player2);
             BattleLoop();
         }
 
