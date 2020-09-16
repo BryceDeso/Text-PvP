@@ -16,23 +16,16 @@ namespace HelloWorld
             _damage = 10;
         }
 
-        public Player(int healthVal, int damageVal, string nameVal)
+        public Player(string nameVal, int healthVal, int damageVal)
         {
             _name = nameVal;
-            _damage = damageVal;
             _health = healthVal;
+            _damage = damageVal;
         }
 
-        public void EquipWeapon(Item weapon)
+        public void EquipItem(Item weapon)
         {
             _damage += weapon.statBoost;
-        }
-
-        public void PrintStats()
-        {
-            Console.WriteLine(_name);
-            Console.WriteLine("Health: " + _health);
-            Console.WriteLine("Damage: " + _damage);
         }
 
         public string GetName()
@@ -50,14 +43,20 @@ namespace HelloWorld
             enemy.TakeDamage(_damage);
         }
 
+        public void PrintStats()
+        {
+            Console.WriteLine("Name: " + _name);
+            Console.WriteLine("Health: " + _health);
+            Console.WriteLine("Damage: " + _damage);
+        }
+
         private void TakeDamage(int damageVal)
         {
-            if(GetIsAlive())
+            if (GetIsAlive())
             {
                 _health -= damageVal;
             }
-            Console.WriteLine(_name + "took " + damageVal + " damage!");
+            Console.WriteLine(_name + " took " + damageVal + " damage!");
         }
-
     }
 }

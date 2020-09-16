@@ -4,139 +4,24 @@ using System.Text;
 
 namespace HelloWorld
 {
+    //Create a turn based PvP game. It should have a battle loop where both players
+    //must fight until one is dead. The game should allow players to upgrade their stats
+    //using items. Both players and items should be defined as structs. 
+
+
     struct Item
     {
         public int statBoost;
     }
 
+
     class Game
     {
-
-        bool _gameOver = false;
-        Player _player1 = new Player(50, 50, "Jeff");
-        Player _player2 = new Player(150, 20, "Chris");
-        Item longsword;
-        Item dagger;
-
-        //Allows the program to get inout from the player.
-        public void GetInput(out char input, string option1, string option2, string query)
-        {
-            Console.WriteLine(query);
-            Console.WriteLine("1. " + option1);
-            Console.WriteLine("2. " + option2);
-            Console.Write("> ");
-
-            input = ' ';
-            while (input != '1' && input != '2')
-            {
-                input = Console.ReadKey().KeyChar;
-                if (input != '1' && input != '2')
-                {
-                    Console.WriteLine("Invalid Input");
-                }
-
-            }
-        }
-
-        public void CreateCharacter(Player player)
-        {
-            Console.WriteLine("What is your name?");
-            string _name = Console.ReadLine();
-            player = new Player(100, 10, _name);
-            SelectItems(player);
-            return player;
-        }
-
-        //Intializes item values
-        public void InitalizeItems()
-        {
-            longsword.statBoost = 20;
-            dagger.statBoost = 10;
-        }
-
-        public void SelectItems()
-        {
-            char input = ' ';
-            GetInput(out input, "Longsword", "Dagger", "Welcome player one, please choose a weapon.");
-            if (input == '1')
-            {
-                _player1.EquipWeapon(longsword);
-            }
-            else if (input == '2')
-            {
-                _player1.EquipWeapon(dagger);
-            }
-            Console.WriteLine("\nPlayer 1");
-            _player1.PrintStats();
-
-
-            GetInput(out input, "Longsword", "Dagger", "Welcome player two, please choose a weapon.");
-            if (input == '1')
-            {
-                _player2.EquipWeapon(longsword);
-            }
-            else if (input == '2')
-            {
-                _player2.EquipWeapon(dagger);
-            }
-        }
-
-        public void BattleLoop()
-        {
-            Console.WriteLine("Now GO!");
-
-            while (_player1.GetIsAlive() && _player2.GetIsAlive())
-            {
-                Console.Clear();
-                _player1.PrintStats();
-                _player2.PrintStats();
-
-                char input = ' ';
-                GetInput(out input, "Attack", "NO!", "Your turn Player 1");
-                if (input == '1')
-                {
-                    _player1.Attack(_player2);
-                    Console.WriteLine("Press any key to continue.");
-                    Console.ReadKey();
-                }
-                else if (input == '2')
-                {
-                    Console.WriteLine("NOOOOOOOOOOOOOOOOOOOOOOOOOOOO!");
-                    Console.WriteLine("Press any key to continue.");
-                    Console.ReadKey();
-                }
-
-                Console.Clear();
-                _player1.PrintStats();
-                _player2.PrintStats();
-
-                GetInput(out input, "Attack", "STOP!", "Your turn Player 2");
-                if (input == '1')
-                {
-                    _player2.Attack(_player1);
-                    Console.WriteLine("Press any key to continue.");
-                    Console.ReadKey();
-                }
-                else if (input == '2')
-                {
-                    Console.WriteLine("STOOOOOOOOOOOOOOOOOOOOOOOOP!");
-                    Console.WriteLine("Press any key to continue.");
-                    Console.ReadKey();
-                }
-            }
-            Console.Clear();
-            if (_player1.GetIsAlive())
-            {
-                Console.WriteLine("Player 1 Wins!!!!!!!!!");
-                Console.WriteLine("Press any key to continue.");
-            }
-            else
-            {
-                Console.WriteLine("Player 2 Wins!!!!!!!!!");
-                Console.WriteLine("Press any key to continue.");
-            }
-            _gameOver = true;
-        }
+        private bool _gameOver = false;
+        private Player _player1;
+        private Player _player2;
+        private Item _longSword;
+        private Item _dagger;
 
         //Run the game
         public void Run()
@@ -149,12 +34,126 @@ namespace HelloWorld
             }
 
             End();
+
         }
+
+        public void InitializeItems()
+        {
+            _longSword.statBoost = 15;
+            _dagger.statBoost = 10;
+        }
+
+        //Displays two options to the player. Outputs the choice of the two options
+        public void GetInput(out char input, string option1, string option2, string query)
+        {
+            //Print description to console
+            Console.WriteLine(query);
+            //print options to console
+            Console.WriteLine("1." + option1);
+            Console.WriteLine("2." + option2);
+            Console.Write("> ");
+
+            input = ' ';
+            //loop until valid input is received
+            while (input != '1' && input != '2')
+            {
+                input = Console.ReadKey().KeyChar;
+                if (input != '1' && input != '2')
+                {
+                    Console.WriteLine("Invalid Input");
+                }
+            }
+        }
+
+        //Equip items to both players in the beginning of the game
+        public void SelectItem(Player player)
+        {
+            //Get input for player one
+            char input;
+            GetInput(out input, "Longsword", "Dagger", "Welcome! Please choose a weapon.");
+            //Equip item based on input value
+            if (input == '1')
+            {
+                player.AddItemToInventory(_longSword, 0);
+            }
+            else if (input == '2')
+            {
+                player.AddItemToInventory(_dagger, 0);
+            }
+        }
+
+        public Player CreateCharacter()
+        {
+            Console.WriteLine("What is your name?");
+            string name = Console.ReadLine();
+            Player player = new Player(name, 100, 10, 5);
+            SelectItem(player);
+            return player;
+        }
+
+        public void ClearScreen()
+        {
+            Console.WriteLine("Press any key to continue");
+            Console.Write("> ");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        public void StartBattle()
+        {
+            ClearScreen();
+            Console.WriteLine("Now GO!");
+
+            while (_player1.GetIsAlive() && _player2.GetIsAlive())
+            {
+                //print player stats to console
+                Console.WriteLine("Player1");
+                _player1.PrintStats();
+                Console.WriteLine("Player2");
+                _player2.PrintStats();
+                //Player 1 turn start
+                //Get player input
+                char input;
+                GetInput(out input, "Attack", "NO", "Your turn Player 1");
+
+                if (input == '1')
+                {
+                    _player1.Attack(_player2);
+                }
+                else
+                {
+                    Console.WriteLine("NO!!!!!");
+                }
+
+                GetInput(out input, "Attack", "NO", "Your turn Player 2");
+
+                if (input == '1')
+                {
+                    _player2.Attack(_player1);
+                }
+                else
+                {
+                    Console.WriteLine("NO!!!!!");
+                }
+                Console.Clear();
+            }
+            if (_player1.GetIsAlive())
+            {
+                Console.WriteLine("Player 1 wins!!1!1!!11!11?");
+            }
+            else
+            {
+                Console.WriteLine("Player 2 wins??????????");
+            }
+            ClearScreen();
+            _gameOver = true;
+        }
+
 
         //Performed once when the game begins
         public void Start()
         {
-            InitalizeItems();
+            InitializeItems();
         }
 
         //Repeated until the game ends
@@ -162,7 +161,7 @@ namespace HelloWorld
         {
             _player1 = CreateCharacter();
             _player2 = CreateCharacter();
-            BattleLoop();
+            StartBattle();
         }
 
         //Performed once when the game ends
