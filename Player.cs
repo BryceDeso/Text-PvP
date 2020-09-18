@@ -8,24 +8,50 @@ namespace HelloWorld
     {
         private string _name;
         private int _health;
-        private int _damage;
+        private int _basedamage;
+        private Item[] _inventory;
+        private Item _currentweapon;
+        private Item _hands;
 
         public Player()
         {
+            _inventory = new Item[3];
             _health = 100;
-            _damage = 10;
+            _basedamage = 10;
+            _hands.name = "Hands";
+            _hands.statBoost = 0;
         }
 
-        public Player(string nameVal, int healthVal, int damageVal)
+        public Player(string nameVal, int healthVal, int damageVal, int inventorySize)
         {
             _name = nameVal;
             _health = healthVal;
-            _damage = damageVal;
+            _basedamage = damageVal;
+            _hands.name = "Hands";
+            _hands.statBoost = 0;
+            _inventory = new Item[inventorySize];
         }
 
-        public void EquipItem(Item weapon)
+        public void AddItemToInventory(Item item, int index)
         {
-            _damage += weapon.statBoost;
+            _inventory[index] = item;
+        }
+
+        public void EquipItem(int itemIndex)
+        {
+            if(Contains(itemIndex))
+            {
+                _currentweapon = _inventory[itemIndex];
+            }
+        }
+
+        public bool Contains(int ItemIndex)
+        {
+            if (ItemIndex > 0 && ItemIndex < _inventory.Length)
+            {
+                return true;
+            }
+            return false;
         }
 
         public string GetName()
@@ -33,21 +59,32 @@ namespace HelloWorld
             return _name;
         }
 
+        public Item[] GetInventory()
+        {
+            return _inventory;
+        }
+
         public bool GetIsAlive()
         {
             return _health > 0;
         }
 
+        public void UnEquipItem()
+        {
+            _currentweapon = _hands;
+        }
+
         public void Attack(Player enemy)
         {
-            enemy.TakeDamage(_damage);
+            int totalDamage = _basedamage + _currentweapon.statBoost;
+            enemy.TakeDamage(totalDamage);
         }
 
         public void PrintStats()
         {
             Console.WriteLine("Name: " + _name);
             Console.WriteLine("Health: " + _health);
-            Console.WriteLine("Damage: " + _damage);
+            Console.WriteLine("Damage: " + _basedamage);
         }
 
         private void TakeDamage(int damageVal)
@@ -56,7 +93,7 @@ namespace HelloWorld
             {
                 _health -= damageVal;
             }
-            Console.WriteLine(_name + " took " + damageVal + " damage!");
+            Console.WriteLine(_name + " took " + damageVal + " damage!!!");
         }
     }
 }
