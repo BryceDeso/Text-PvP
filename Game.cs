@@ -21,6 +21,8 @@ namespace HelloWorld
         private bool _gameOver = false;
         private Player _player1;
         private Player _player2;
+        private Character _player1Partner;
+        private Character _player2Partner;
         private Item _longSword;
         private Item _dagger;
         private Item _bow;
@@ -216,11 +218,17 @@ namespace HelloWorld
 
                 if (input == '1')
                 {
-                    _player1.Attack(_player2);
+                    float damageTaken = _player1.Attack(_player2);
+                    Console.WriteLine(_player1.GetName() + " did " + damageTaken + " damage!");
+                    damageTaken = _player1Partner.Attack(_player2);
+                    Console.WriteLine(_player1Partner.GetName() + " did " + damageTaken + " damage!");
                 }
                 else
                 {
-                    SwitchWeapon(_player1);
+                    float damageTaken = _player2.Attack(_player1);
+                    Console.WriteLine(_player2.GetName() + " did " + damageTaken + " damage!");
+                    damageTaken = _player2Partner.Attack(_player1);
+                    Console.WriteLine(_player2Partner.GetName() + " did " + damageTaken + " damage!");
                 }
 
                 GetInput(out input, "Attack", "Change weapon", "Your turn Player 2");
@@ -252,6 +260,8 @@ namespace HelloWorld
         public void Start()
         {
             InitializeItems();
+            _player1Partner = new Wizard(120, "Wizard Lizard", 20, 100);
+            _player2Partner = new Wizard(120, "Hairy Wizard 101", 20, 100);
         }
 
         //Repeated until the game ends

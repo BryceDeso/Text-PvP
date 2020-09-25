@@ -4,11 +4,8 @@ using System.Text;
 
 namespace HelloWorld
 {
-    class Player
+    class Player : Character
     {
-        private string _name;
-        private int _health;
-        private int _basedamage;
         private Item[] _inventory;
         private Item _currentweapon;
         private Item _hands;
@@ -16,17 +13,13 @@ namespace HelloWorld
         public Player()
         {
             _inventory = new Item[3];
-            _health = 100;
-            _basedamage = 10;
             _hands.name = "Hands";
             _hands.statBoost = 0;
         }
 
-        public Player(string nameVal, int healthVal, int damageVal, int inventorySize)
+        public Player(string nameVal, float healthVal, float damageVal, int inventorySize)
+            : base(healthVal, nameVal, damageVal)
         {
-            _name = nameVal;
-            _health = healthVal;
-            _basedamage = damageVal;
             _hands.name = "Hands";
             _hands.statBoost = 0;
             _inventory = new Item[inventorySize];
@@ -54,19 +47,9 @@ namespace HelloWorld
             return false;
         }
 
-        public string GetName()
-        {
-            return _name;
-        }
-
         public Item[] GetInventory()
         {
             return _inventory;
-        }
-
-        public bool GetIsAlive()
-        {
-            return _health > 0;
         }
 
         public void UnEquipItem()
@@ -74,26 +57,10 @@ namespace HelloWorld
             _currentweapon = _hands;
         }
 
-        public void Attack(Player enemy)
+        public override float Attack(Character enemy)
         {
-            int totalDamage = _basedamage + _currentweapon.statBoost;
-            enemy.TakeDamage(totalDamage);
-        }
-
-        public void PrintStats()
-        {
-            Console.WriteLine("Name: " + _name);
-            Console.WriteLine("Health: " + _health);
-            Console.WriteLine("Damage: " + _basedamage);
-        }
-
-        private void TakeDamage(int damageVal)
-        {
-            if (GetIsAlive())
-            {
-                _health -= damageVal;
-            }
-            Console.WriteLine(_name + " took " + damageVal + " damage!!!");
+            float totalDamage = _damage + _currentweapon.statBoost;
+            return enemy.TakeDamage(totalDamage);
         }
     }
 }
