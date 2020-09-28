@@ -8,26 +8,32 @@ namespace HelloWorld
     {
         private float _mana;
 
-
-        //Calls the default constructer for the wizard, and then calls the base classes constructer.
-        public Wizard(float manaVal) : base()
+        //Calls the default constructor for the wizard, and then calls the base classes constructor.
+        public Wizard() : base()
         {
             _mana = 100;
         }
 
-        public Wizard(float healthVal, string nameVal, float damageVal, float manaVal) 
+        public Wizard(float healthVal, string nameVal, float damageVal, float manaVal)
             : base(healthVal, nameVal, damageVal)
         {
             _mana = manaVal;
         }
 
+        public void TestFunc()
+        {
+
+        }
+
         public override float Attack(Character enemy)
         {
             float damageTaken = 0.0f;
-            if(_mana >= 4)
+            if (_mana >= 4)
             {
                 float totalDamage = _damage + _mana * .25f;
                 _mana -= _mana * .25f;
+                //Is the same as:
+                //_mana = _mana - (_mana * .25f);
                 damageTaken = enemy.TakeDamage(totalDamage);
                 return damageTaken;
             }

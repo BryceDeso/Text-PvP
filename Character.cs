@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace HelloWorld
 {
@@ -20,8 +21,8 @@ namespace HelloWorld
         public Character(float healthVal, string nameVal, float damageVal)
         {
             _health = healthVal;
-            _damage = damageVal;
             _name = nameVal;
+            _damage = damageVal;
         }
 
         public virtual float Attack(Character enemy)
@@ -37,6 +38,51 @@ namespace HelloWorld
             Console.WriteLine("Damage: " + _damage);
         }
 
+        public virtual float TakeDamage(float damageVal)
+        {
+            _health -= damageVal;
+            if (_health < 0)
+            {
+                _health = 0;
+            }
+            return damageVal;
+        }
+
+        public virtual void Save(StreamWriter writer)
+        {
+            //Saves the characters stats
+            writer.WriteLine(_name);
+            writer.WriteLine(_health);
+            writer.WriteLine(_damage);
+            writer.Close();
+
+            //Save the characters stats
+            writer.WriteLine(_name);
+            writer.WriteLine(_health);
+            writer.WriteLine(_damage);
+        }
+
+        public virtual bool Load(StreamReader reader)
+        {
+            //Create variables to store loaded data.
+            string name = reader.ReadLine();
+            float damage = 0;
+            float health = 0;
+            //Checks to see if loading was successful.
+            if (float.TryParse(reader.ReadLine(), out health) == false)
+            {
+                return false;
+            }
+            if (float.TryParse(reader.ReadLine(), out damage) == false)
+            {
+                return false;
+            }
+            //if succsessful, ser update the memeber variables and retrun true.
+            _name = name;
+            _health = health;
+            _damage = damage;
+            return true;
+        }
         public string GetName()
         {
             return _name;
@@ -45,16 +91,6 @@ namespace HelloWorld
         public bool GetIsAlive()
         {
             return _health > 0;
-        }
-
-        public virtual float TakeDamage(float damageVal)
-        {
-            _health -= damageVal;
-            if(_health < 0 )
-            {
-                _health = 0;
-            }
-            return damageVal;
         }
     }
 }

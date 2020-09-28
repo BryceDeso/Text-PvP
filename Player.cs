@@ -7,44 +7,22 @@ namespace HelloWorld
     class Player : Character
     {
         private Item[] _inventory;
-        private Item _currentweapon;
+        private Item _currentWeapon;
         private Item _hands;
 
-        public Player()
+        public Player() : base()
         {
             _inventory = new Item[3];
-            _hands.name = "Hands";
+            _hands.name = "These hands";
             _hands.statBoost = 0;
         }
 
         public Player(string nameVal, float healthVal, float damageVal, int inventorySize)
             : base(healthVal, nameVal, damageVal)
         {
-            _hands.name = "Hands";
-            _hands.statBoost = 0;
             _inventory = new Item[inventorySize];
-        }
-
-        public void AddItemToInventory(Item item, int index)
-        {
-            _inventory[index] = item;
-        }
-
-        public void EquipItem(int itemIndex)
-        {
-            if(Contains(itemIndex))
-            {
-                _currentweapon = _inventory[itemIndex];
-            }
-        }
-
-        public bool Contains(int ItemIndex)
-        {
-            if (ItemIndex > 0 && ItemIndex < _inventory.Length)
-            {
-                return true;
-            }
-            return false;
+            _hands.name = "These hands";
+            _hands.statBoost = 0;
         }
 
         public Item[] GetInventory()
@@ -52,14 +30,36 @@ namespace HelloWorld
             return _inventory;
         }
 
-        public void UnEquipItem()
+        public void AddItemToInventory(Item item, int index)
         {
-            _currentweapon = _hands;
+            _inventory[index] = item;
+        }
+
+        public bool Contains(int itemIndex)
+        {
+            if (itemIndex > 0 && itemIndex < _inventory.Length)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void EquipItem(int itemIndex)
+        {
+            if (Contains(itemIndex))
+            {
+                _currentWeapon = _inventory[itemIndex];
+            }
+        }
+
+        public void UnequipItem()
+        {
+            _currentWeapon = _hands;
         }
 
         public override float Attack(Character enemy)
         {
-            float totalDamage = _damage + _currentweapon.statBoost;
+            float totalDamage = _damage + _currentWeapon.statBoost;
             return enemy.TakeDamage(totalDamage);
         }
     }
